@@ -1,9 +1,5 @@
 import _ from "lodash";
-import bcrypt from "bcrypt";
 import Product from "../models/product.js";
-import User from "./../models/user.js";
-
-const SELLER = "seller";
 
 export default {
   list: async (req, res) => {
@@ -13,21 +9,12 @@ export default {
     res.send(products);
   },
   create: async (req, res) => {
-    // Check if the user
-    let user = await User.findById(req.body.seller).populate({ path: "role" });
-    if (!user)
-      return res
-        .status(400)
-        .send("The given User does not exists in the Database!");
-
-    // Check if the user role is Seller
-    if (user.role.name !== SELLER) {
-      return res.status(401).send("You are not allowed to create products!");
-    }
-
-    const product = new Product(
-      _.pick(req.body, ["productName", "cost", "amountAvailable", "seller"])
-    );
+    const product = new Product({
+      productName: req.body.productName,
+      cost: req.body.cost,
+      amountAvailable: req.body.amountAvailable,
+      seller: req.user._id,
+    });
 
     await product.save();
 
@@ -45,27 +32,36 @@ export default {
     res.send(product);
   },
   update: async (req, res) => {
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      _.pick(req.body, ["productName", "cost", "amountAvailable"]),
-      { new: true }
-    );
-
+    let product = await Product.findById(req.params.id);
     if (!product)
       return res
         .status(404)
         .send("The product with the given ID was not found!");
+
+    if (!product.seller.equals(req.user._id))
+      return res
+        .status(404)
+        .send(`Access Denied! Your are not allowed to update this product!`);
+
+    product.productName = req.body.productName;
+    product.cost = req.body.cost;
+    product.amountAvailable = req.body.amountAvailable;
+
+    product.save();
 
     return res.send(product);
   },
   delete: async (req, res) => {
-    const product = await Product.findByIdAndRemove(req.params.id);
-
+    let product = await Product.findById(req.params.id);
     if (!product)
       return res
         .status(404)
         .send("The product with the given ID was not found!");
-
+    if (!product.seller.equals(req.user._id))
+      return res
+        .status(404)
+        .send(`Access Denied! Your are not allowed to update this product!`);
+    product.delete();
     res.send(product);
   },
 };
