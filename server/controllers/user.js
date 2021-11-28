@@ -4,20 +4,20 @@ import User, { validateUser } from "./../models/user.js";
 
 export default {
   create: async (req, res) => {
-    const { error } = validateUser(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    // Check if username already exists in the database
+    let user = await User.findOne({ username: req.body.username });
+    if (user) return res.status(400).send("Username already registered!");
 
-    let user = new User(_.pick(req.body, ["username", "password", "role"]));
-
-    user.password = await generatePassword(user.password);
-
+    user = new User(_.pick(req.body, ["username", "password", "role"]));
+    // Crypt the plain text password
+    user.password = await cryptPassword(user.password);
     await user.save();
 
     res.send(_.pick(user, ["_id", "username", "role"]));
   },
 };
 
-async function generatePassword(password) {
+async function cryptPassword(password) {
   const salt = await bcrypt.genSalt(10);
   return await bcrypt.hash(password, salt);
 }
