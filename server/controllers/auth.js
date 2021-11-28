@@ -4,7 +4,9 @@ import User from "./../models/user.js";
 
 export default {
   login: async (req, res) => {
-    let user = await User.findOne({ username: req.body.username });
+    let user = await User.findOne({ username: req.body.username }).populate({
+      path: "role",
+    });
     if (!user) return res.status(400).send("Invalid email or password.");
 
     const validPassword = await bcrypt.compare(

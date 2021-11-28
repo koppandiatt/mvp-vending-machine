@@ -4,8 +4,6 @@ import User from "./../models/user.js";
 import Role from "../models/role.js";
 
 export default {
-  profile: async (req, res) => {},
-  deposit: async (req, res) => {},
   create: async (req, res) => {
     // Check if username already exists in the database
     let user = await User.findOne({ username: req.body.username });
@@ -23,10 +21,28 @@ export default {
     user.password = await cryptPassword(user.password);
     await user.save();
 
-    res.send(_.pick(user, ["_id", "username", "role"]));
+    const token = user.generateAuthToken();
+
+    res
+      .header("Authorization", `Bearer ${token}`)
+      .send(_.pick(user, ["_id", "username", "role"]));
   },
-  update: async (req, res) => {},
-  delete: async (req, res) => {},
+  changePassword: async (req, res) => {
+    let { user } = req;
+    user.password = await cryptPassword(req.body.password);
+    await user.save();
+
+    const token = user.generateAuthToken();
+
+    res
+      .header("Authorization", `Bearer ${token}`)
+      .send(_.pick(user, ["_id", "username", "role"]));
+  },
+  delete: async (req, res) => {
+    req.user.delete();
+    return res.send(req.user);
+  },
+  deposit: async (req, res) => {},
 };
 
 async function cryptPassword(password) {

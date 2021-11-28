@@ -63,4 +63,25 @@ export function validateUser(user) {
   return schema.validate(user);
 }
 
+export function validatePassword(body) {
+  const passwordComplexity = {
+    min: 6,
+    max: 255,
+    upperCase: 1,
+    numeric: 1,
+    requirementCount: 2,
+  };
+
+  const schema = Joi.object({
+    password: new PasswordComplexity(passwordComplexity).required(),
+    password_confirmation: Joi.any()
+      .equal(Joi.ref("password"))
+      .required()
+      .label("Confirm password")
+      .options({ messages: { "any.only": "{{#label}} does not match!" } }),
+  });
+
+  return schema.validate(body);
+}
+
 export default User;

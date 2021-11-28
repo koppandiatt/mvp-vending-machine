@@ -13,19 +13,24 @@ router.post(
   "/",
   [
     auth.isAuthenticated,
-    auth.hasRole([ROLES.SELLER]),
+    auth.hasRole(ROLES.SELLER),
     validate.body(validateProduct),
   ],
   product.create
 );
 router.put(
   "/:id",
-  [auth.isAuthenticated, validate.objectID, validate.body(validateProduct)],
+  [
+    auth.isAuthenticated,
+    auth.hasRole(ROLES.SELLER),
+    validate.objectID,
+    validate.body(validateProduct),
+  ],
   product.update
 );
 router.delete(
   "/:id",
-  [auth.isAuthenticated, validate.objectID],
+  [auth.isAuthenticated, auth.hasRole(ROLES.SELLER), validate.objectID],
   product.delete
 );
 
