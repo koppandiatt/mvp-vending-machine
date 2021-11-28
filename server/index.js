@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import winston from "winston";
-import initialize from "./startup/initialize.js";
+import initialize from "./bootstrap/initialize.js";
 
 dotenv.config();
 
