@@ -1,5 +1,4 @@
 import Joi from "joi";
-import joiPassword from "joi-password";
 import mongoose from "mongoose";
 import PasswordComplexity from "joi-password-complexity";
 
