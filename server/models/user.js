@@ -1,8 +1,11 @@
 import Joi from "joi";
 import joiPassword from "joi-password";
-import { model, Schema } from "mongoose";
+import mongoose from "mongoose";
+import PasswordComplexity from "joi-password-complexity";
 
-const userSchema = new Schema({
+const { model, Schema } = mongoose;
+
+export const userSchema = new Schema({
   username: {
     type: String,
     required: true,
@@ -28,16 +31,18 @@ const userSchema = new Schema({
 
 const User = model("User", userSchema);
 
-function validateUser(user) {
+export function validateUser(user) {
+  const passwordComplexity = {
+    min: 6,
+    max: 255,
+    upperCase: 1,
+    numeric: 1,
+    requirementCount: 2,
+  };
+
   const schema = Joi.object({
     username: Joi.string().min(6).max(50).required(),
-    password: joiPassword
-      .string()
-      .minOfUppercase(1)
-      .minOfNumeric(1)
-      .minOfSpecialCharacters(1)
-      .noWhiteSpaces()
-      .required(),
+    password: new PasswordComplexity(passwordComplexity).required(),
     password_confirmation: Joi.any()
       .equal(Joi.ref("password"))
       .required()
@@ -50,6 +55,4 @@ function validateUser(user) {
   return schema.validate(user);
 }
 
-exports.User = User;
-exports.userSchema = userSchema;
-exports.validate = validateUser;
+export default User;

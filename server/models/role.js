@@ -6,3 +6,5 @@ const roleSchema = new Schema({
     required: true,
   },
 });
+
+export default roleSchema;
