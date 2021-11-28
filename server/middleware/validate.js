@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 export default {
   body: (validator) => {
     return (req, res, next) => {
@@ -5,5 +7,10 @@ export default {
       if (error) return res.status(400).send(error.details[0].message);
       next();
     };
+  },
+  objectID: (req, res, next) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id))
+      return res.status(404).send("The given ID is invalid!.");
+    next();
   },
 };
