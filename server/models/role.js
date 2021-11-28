@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const { model, Schema } = mongoose;
 
-export const roleSchema = new Schema({
-  role: {
+const roleSchema = new Schema({
+  name: {
     type: String,
     required: true,
   },
