@@ -34,7 +34,7 @@ export function validateProduct(product) {
     productName: Joi.string().min(3).max(1000000).required(),
     cost: Joi.number().min(0).required(),
     amountAvailable: Joi.number().min(0).required(),
-    seller: Joi.objectId().required(),
+    seller: Joi.objectId(),
   });
 
   return schema.validate(product);

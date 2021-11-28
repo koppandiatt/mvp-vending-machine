@@ -42,7 +42,20 @@ export default {
 
     res.send(product);
   },
-  update: async (req, res) => {},
+  update: async (req, res) => {
+    const product = await Product.findByIdAndUpdate(
+      req.params.id,
+      _.pick(req.body, ["productName", "cost", "amountAvailable"]),
+      { new: true }
+    );
+
+    if (!product)
+      return res
+        .status(404)
+        .send("The product with the given ID was not found!");
+
+    return res.send(product);
+  },
   delete: async (req, res) => {},
   buy: async (req, res) => {},
 };
