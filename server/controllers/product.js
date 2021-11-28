@@ -33,7 +33,15 @@ export default {
 
     res.send(product);
   },
-  get: async (req, res) => {},
+  get: async (req, res) => {
+    const product = await Product.findById(req.params.id).select("-__v");
+    if (!product)
+      return res
+        .status(404)
+        .send("The product with the given ID was not found!");
+
+    res.send(product);
+  },
   update: async (req, res) => {},
   delete: async (req, res) => {},
   buy: async (req, res) => {},
