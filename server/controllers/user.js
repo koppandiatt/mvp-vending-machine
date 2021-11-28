@@ -4,6 +4,8 @@ import User from "./../models/user.js";
 import Role from "../models/role.js";
 
 export default {
+  profile: async (req, res) => {},
+  deposit: async (req, res) => {},
   create: async (req, res) => {
     // Check if username already exists in the database
     let user = await User.findOne({ username: req.body.username });
@@ -23,6 +25,8 @@ export default {
 
     res.send(_.pick(user, ["_id", "username", "role"]));
   },
+  update: async (req, res) => {},
+  delete: async (req, res) => {},
 };
 
 async function cryptPassword(password) {
