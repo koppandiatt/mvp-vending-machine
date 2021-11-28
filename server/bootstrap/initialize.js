@@ -1,9 +1,17 @@
+import winston from "winston";
 import database from "./database.js";
 import logging from "./logging.js";
+import checkJWTPrivateKey from "./config.js";
 
-const initialize = {
-  logging,
-  database,
-};
+async function initializeServer() {
+  logging();
+  try {
+    checkJWTPrivateKey();
+    await database();
+  } catch (error) {
+    winston.error(error.message);
+    process.exit(1);
+  }
+}
 
-export default initialize;
+export default initializeServer;

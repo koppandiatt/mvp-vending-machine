@@ -18,9 +18,24 @@ function logging() {
   winston.add(fileLogs);
 
   if (process.env.NODE_ENV !== "production") {
+    const customFormat = winston.format.combine(
+      winston.format.colorize({
+        all: true,
+      }),
+      winston.format.label({
+        label: "[LOGGER]",
+      }),
+      winston.format.timestamp({
+        format: "YY-MM-DD HH:MM:SS",
+      }),
+      winston.format.printf(
+        (info) =>
+          ` ${info.label}  ${info.timestamp}  ${info.level} : ${info.message}`
+      )
+    );
     winston.add(
       new winston.transports.Console({
-        format: winston.format.simple(),
+        format: winston.format.combine(winston.format.colorize(), customFormat),
       })
     );
   }
