@@ -34,7 +34,9 @@ export default {
     res.send(product);
   },
   get: async (req, res) => {
-    const product = await Product.findById(req.params.id).select("-__v");
+    const product = await Product.findById(req.params.id)
+      .populate({ path: "seller", select: "_id username" })
+      .select("-__v");
     if (!product)
       return res
         .status(404)
@@ -56,6 +58,14 @@ export default {
 
     return res.send(product);
   },
-  delete: async (req, res) => {},
-  buy: async (req, res) => {},
+  delete: async (req, res) => {
+    const product = await Product.findByIdAndRemove(req.params.id);
+
+    if (!product)
+      return res
+        .status(404)
+        .send("The product with the given ID was not found!");
+
+    res.send(product);
+  },
 };

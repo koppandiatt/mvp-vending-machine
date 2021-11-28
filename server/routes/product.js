@@ -14,5 +14,6 @@ router.put(
   validate.body(validateProduct),
   product.update
 );
+router.delete("/:id", validate.objectID, product.delete);
 
 export default router;
