@@ -13,7 +13,7 @@ router.post(
   "/",
   [
     auth.isAuthenticated,
-    auth.hasRole(ROLES.SELLER),
+    auth.hasRole([ROLES.SELLER]),
     validate.body(validateProduct),
   ],
   product.create

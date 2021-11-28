@@ -27,11 +27,18 @@ export default {
       }
     );
   },
-  hasRole: (role) => {
+  hasRole: (roles) => {
     return async (req, res, next) => {
       const user = await User.findById(req.user._id).populate({ path: "role" });
-      if (role !== user.role.name)
-        return res.status(401).send(`Access denied. You are not a ${role}!`);
+      if (Array.isArray(roles) && !roles.includes(user.role.name)) {
+        return res
+          .status(401)
+          .send(`Access denied. You don't have enough privileges!`);
+      } else if (user.role.name !== roles) {
+        return res
+          .status(401)
+          .send(`Access denied. You don't have enough privileges!`);
+      }
       next();
     };
   },
