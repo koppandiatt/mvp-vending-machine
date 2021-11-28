@@ -1,4 +1,5 @@
 import Joi from "joi";
+import JWT from "jsonwebtoken";
 import mongoose from "mongoose";
 import PasswordComplexity from "joi-password-complexity";
 
@@ -27,6 +28,14 @@ export const userSchema = new Schema({
     required: true,
   },
 });
+
+userSchema.methods.generateAuthToken = function () {
+  return JWT.sign(
+    { _id: this._id, username: this.username, role: this.role },
+    process.env.JWT_PRIVATE_KEY,
+    { expiresIn: "1d" }
+  );
+};
 
 const User = model("User", userSchema);
 
