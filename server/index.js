@@ -3,10 +3,11 @@ import dotenv from "dotenv";
 import express from "express";
 import morgan from "morgan";
 import winston from "winston";
-import initializeServer from "./bootstrap/initialize.js";
+import initializeServer from "./app/initialize.js";
 import routes from "./routes/index.js";
 
 dotenv.config();
+
 await initializeServer();
 
 const app = express();
