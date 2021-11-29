@@ -42,7 +42,14 @@ export default {
     req.user.delete();
     return res.send(req.user);
   },
-  deposit: async (req, res) => {},
+  deposit: async (req, res) => {
+    let { user } = req;
+    user.deposit += req.body.deposit;
+
+    await user.save();
+
+    res.send({ deposit: user.deposit });
+  },
 };
 
 async function cryptPassword(password) {

@@ -2,6 +2,7 @@ import Joi from "joi";
 import JWT from "jsonwebtoken";
 import mongoose from "mongoose";
 import PasswordComplexity from "joi-password-complexity";
+import { COINS } from "../constants/coins.js";
 
 const { model, Schema } = mongoose;
 
@@ -79,6 +80,16 @@ export function validatePassword(body) {
       .required()
       .label("Confirm password")
       .options({ messages: { "any.only": "{{#label}} does not match!" } }),
+  });
+
+  return schema.validate(body);
+}
+
+export function validateDeposit(body) {
+  const schema = Joi.object({
+    deposit: Joi.number()
+      .valid(...COINS)
+      .required(),
   });
 
   return schema.validate(body);
