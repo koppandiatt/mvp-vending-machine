@@ -42,7 +42,9 @@ export default {
 
     await product.save();
 
-    return res.send(product);
+    return res.send(
+      _.pick(product, ["_id", "productName", "cost", "amountAvailable"])
+    );
   },
   delete: async (req, res) => {
     if (!req?.product) return res.status(404).send("Product not found!");

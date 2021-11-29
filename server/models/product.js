@@ -1,6 +1,7 @@
 import Joi from "joi";
 import mongoose from "mongoose";
-import { MODELS } from "../constants/models.js";
+import { MODELS } from "./../constants/models.js";
+import { COINS } from "./../constants/coins.js";
 
 const { model, Schema } = mongoose;
 
@@ -31,9 +32,10 @@ const productSchema = new Schema({
 const Product = model(MODELS.PRODUCT, productSchema);
 
 export function validateProduct(product) {
+  const firstCoin = _.sortBy(COINS)[0];
   const schema = Joi.object({
-    productName: Joi.string().min(3).max(1000000).required(),
-    cost: Joi.number().min(0).multiple(5).required(),
+    productName: Joi.string().min(3).max(255).required(),
+    cost: Joi.number().min(0).multiple(firstCoin).required(),
     amountAvailable: Joi.number().min(0).required(),
     seller: Joi.objectId(),
   });

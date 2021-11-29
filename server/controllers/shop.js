@@ -35,8 +35,8 @@ export default {
 
     if (product.amountAvailable < quantity)
       return res.status(400).send({
-        error: "This product is not available anymore!",
-        data: product,
+        error: "The required amount is not available anymore!",
+        data: _.pick(product, ["_id", "amountAvailable"]),
       });
 
     const { deposit } = user;

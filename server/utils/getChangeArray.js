@@ -19,9 +19,8 @@ export function getChangeArray(change = 0, coins = []) {
       let amountOfCoinInChange = Math.floor(change / coin);
       if (!amountOfCoinInChange) return null;
       change -= amountOfCoinInChange * coin;
-      let pair = {};
-      pair[coin] = amountOfCoinInChange;
-      return pair;
+      return { coin, amount: amountOfCoinInChange };
     })
-    .filter((change) => change);
+    .filter((change) => change)
+    .reverse();
 }
