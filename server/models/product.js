@@ -1,5 +1,6 @@
 import Joi from "joi";
 import mongoose from "mongoose";
+import { MODELS } from "../constants/models.js";
 
 const { model, Schema } = mongoose;
 
@@ -22,12 +23,12 @@ const productSchema = new Schema({
   },
   seller: {
     type: Schema.ObjectId,
-    ref: "User",
+    ref: MODELS.USER,
     required: true,
   },
 });
 
-const Product = model("Product", productSchema);
+const Product = model(MODELS.PRODUCT, productSchema);
 
 export function validateProduct(product) {
   const schema = Joi.object({

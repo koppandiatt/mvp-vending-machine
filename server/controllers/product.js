@@ -40,13 +40,13 @@ export default {
     product.cost = req.body.cost;
     product.amountAvailable = req.body.amountAvailable;
 
-    product.save();
+    await product.save();
 
     return res.send(product);
   },
   delete: async (req, res) => {
     if (!req?.product) return res.status(404).send("Product not found!");
-    req.product.delete();
+    await req.product.delete();
     res.send(req.product);
   },
 };

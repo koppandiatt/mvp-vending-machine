@@ -3,6 +3,7 @@ import JWT from "jsonwebtoken";
 import mongoose from "mongoose";
 import PasswordComplexity from "joi-password-complexity";
 import { COINS } from "../constants/coins.js";
+import { MODELS } from "../constants/models.js";
 
 const { model, Schema } = mongoose;
 
@@ -25,7 +26,7 @@ export const userSchema = new Schema({
   },
   role: {
     type: Schema.ObjectId,
-    ref: "Role",
+    ref: MODELS.ROLE,
     required: true,
   },
 });
@@ -38,7 +39,7 @@ userSchema.methods.generateAuthToken = function () {
   );
 };
 
-const User = model("User", userSchema);
+const User = model(MODELS.USER, userSchema);
 
 export function validateUser(user) {
   const passwordComplexity = {

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { MODELS } from "../constants/models.js";
 
 const { model, Schema } = mongoose;
 
@@ -9,6 +10,6 @@ const roleSchema = new Schema({
   },
 });
 
-const Role = model("Role", roleSchema);
+const Role = model(MODELS.ROLE, roleSchema);
 
 export default Role;

@@ -27,6 +27,8 @@ export default {
       .header("Authorization", `Bearer ${token}`)
       .send(_.pick(user, ["_id", "username", "role"]));
   },
+  // for this endpoint user has to be authenticated
+  // so we will set the current user in request parameter
   changePassword: async (req, res) => {
     let { user } = req;
     user.password = await cryptPassword(req.body.password);
@@ -38,10 +40,14 @@ export default {
       .header("Authorization", `Bearer ${token}`)
       .send(_.pick(user, ["_id", "username", "role"]));
   },
+  // for this endpoint user has to be authenticated
+  // so we will set the current user in request parameter
   delete: async (req, res) => {
-    req.user.delete();
+    await req.user.delete();
     return res.send(req.user);
   },
+  // for this endpoint user has to be authenticated
+  // so we will set the current user in request parameter
   deposit: async (req, res) => {
     let { user } = req;
     user.deposit += req.body.deposit;
