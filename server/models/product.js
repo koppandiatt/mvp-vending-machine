@@ -1,5 +1,6 @@
 import Joi from "joi";
 import mongoose from "mongoose";
+import _ from "lodash";
 import { MODELS } from "./../constants/models.js";
 import { COINS } from "./../constants/coins.js";
 
