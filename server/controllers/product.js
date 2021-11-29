@@ -32,16 +32,9 @@ export default {
     res.send(product);
   },
   update: async (req, res) => {
-    let product = await Product.findById(req.params.id);
-    if (!product)
-      return res
-        .status(404)
-        .send("The product with the given ID was not found!");
+    if (!req?.product) return res.status(404).send("Product not found!");
 
-    if (!product.seller.equals(req.user._id))
-      return res
-        .status(404)
-        .send(`Access Denied! Your are not allowed to update this product!`);
+    let { product } = req;
 
     product.productName = req.body.productName;
     product.cost = req.body.cost;
@@ -52,16 +45,8 @@ export default {
     return res.send(product);
   },
   delete: async (req, res) => {
-    let product = await Product.findById(req.params.id);
-    if (!product)
-      return res
-        .status(404)
-        .send("The product with the given ID was not found!");
-    if (!product.seller.equals(req.user._id))
-      return res
-        .status(404)
-        .send(`Access Denied! Your are not allowed to update this product!`);
-    product.delete();
-    res.send(product);
+    if (!req?.product) return res.status(404).send("Product not found!");
+    req.product.delete();
+    res.send(req.product);
   },
 };

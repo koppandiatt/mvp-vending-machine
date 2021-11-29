@@ -23,6 +23,7 @@ router.put(
   [
     auth.isAuthenticated,
     auth.hasRole(ROLES.SELLER),
+    auth.isProductOwner,
     validate.objectID,
     validate.body(validateProduct),
   ],
@@ -30,7 +31,12 @@ router.put(
 );
 router.delete(
   "/:id",
-  [auth.isAuthenticated, auth.hasRole(ROLES.SELLER), validate.objectID],
+  [
+    auth.isAuthenticated,
+    auth.hasRole(ROLES.SELLER),
+    auth.isProductOwner,
+    validate.objectID,
+  ],
   product.delete
 );
 
