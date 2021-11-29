@@ -32,7 +32,7 @@ const Product = model("Product", productSchema);
 export function validateProduct(product) {
   const schema = Joi.object({
     productName: Joi.string().min(3).max(1000000).required(),
-    cost: Joi.number().min(0).required(),
+    cost: Joi.number().min(0).multiple(5).required(),
     amountAvailable: Joi.number().min(0).required(),
     seller: Joi.objectId(),
   });
