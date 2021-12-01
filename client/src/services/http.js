@@ -11,7 +11,7 @@ axios.interceptors.response.use(null, (req) => {
     toast.error(response.data.error);
   } else {
     toast.error("Something went wrong! Please contact server administrator!");
-    console.log(`An unexpected error occurrred: ${error}`);
+    console.log(`An unexpected error occurrred: ${response.data}`);
   }
 
   return Promise.reject(req);
