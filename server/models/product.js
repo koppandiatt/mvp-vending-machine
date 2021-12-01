@@ -1,5 +1,6 @@
 import Joi from "joi";
 import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 import _ from "lodash";
 import { MODELS } from "./../constants/models.js";
 import { COINS } from "./../constants/coins.js";
@@ -30,6 +31,7 @@ const productSchema = new Schema({
   },
 });
 
+productSchema.plugin(mongoosePaginate);
 const Product = model(MODELS.PRODUCT, productSchema);
 
 export function validateProduct(product) {

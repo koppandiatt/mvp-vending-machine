@@ -2,3 +2,4 @@
 server/logs/
 server/test.js
 .env
+MOCK_DATA.json

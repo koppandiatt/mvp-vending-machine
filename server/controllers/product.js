@@ -3,9 +3,25 @@ import Product from "../models/product.js";
 
 export default {
   list: async (req, res) => {
-    const products = await Product.find()
-      .populate({ path: "seller", select: "_id username" })
-      .select({ __v: 0 });
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 20;
+    const search = req.query.search || "";
+
+    const query = search
+      ? {
+          productName: {
+            $regex: `.*${search}.*`,
+            $options: "i",
+          },
+        }
+      : {};
+
+    const options = {
+      populate: { path: "seller", select: "_id username" },
+      limit,
+      page,
+    };
+    const products = await Product.paginate(query, options);
     res.send(products);
   },
   create: async (req, res) => {
