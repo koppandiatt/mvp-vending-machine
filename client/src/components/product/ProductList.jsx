@@ -6,17 +6,19 @@ import TopBar from "./TopBar";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts, productState } from "../../slices/product/productSlice";
 import { PAGE_SIZE } from "../../constants/pageSize";
+import { Spinner } from "react-bootstrap";
 
 const ProductList = () => {
   const dispatch = useDispatch();
-  const product = useSelector(productState);
+  const { products, currentPage, searchQuery, loading } =
+    useSelector(productState);
 
   useEffect(() => {
     dispatch(
       fetchProducts({
-        page: product.currentPage,
+        page: currentPage,
         limit: PAGE_SIZE,
-        search: product.searchQuery,
+        search: searchQuery,
       })
     );
   }, []);
@@ -25,11 +27,17 @@ const ProductList = () => {
     <>
       <TopBar />
       <div className="product-container">
-        {product.products.map((product) => (
-          <SingleProduct key={product._id} product={product} />
-        ))}
+        {loading ? (
+          <Spinner animation="grow" variant="success" />
+        ) : products.length ? (
+          products.map((product) => (
+            <SingleProduct key={product._id} product={product} />
+          ))
+        ) : (
+          <h4>There are no products in the database</h4>
+        )}
       </div>
-      <Paginate className="justify-content-center" />
+      {!loading && <Paginate className="justify-content-center" />}
     </>
   );
 };

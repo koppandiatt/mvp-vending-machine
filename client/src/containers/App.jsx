@@ -9,11 +9,9 @@ function App() {
   return (
     <main>
       <NavigationBar />
-
       <Container className="mb-5">
         <ProductList />
       </Container>
-
       <SideBar />
     </main>
   );
