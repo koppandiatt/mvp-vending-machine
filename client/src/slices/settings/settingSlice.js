@@ -6,7 +6,7 @@ const initialState = {
 };
 
 export const settingSlice = createSlice({
-  name: "app",
+  name: "settings",
   initialState,
   reducers: {
     showCheckout: (state) => {
@@ -26,5 +26,7 @@ export const settingSlice = createSlice({
 
 export const { showCheckout, hideCheckout, showLogin, hideLogin } =
   settingSlice.actions;
+
+export const settingsState = (state) => state.settings;
 
 export default settingSlice.reducer;
