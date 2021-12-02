@@ -33,8 +33,13 @@ const NavigationBar = () => {
         <Container>
           <Navbar.Brand href="/">Vending machine</Navbar.Brand>
           <Nav>
+            {auth.isAuthenticated && authHelper.hasRole(ROLES.BUYER) && (
+              <Button variant="warning" disabled className="me-2">
+                {auth.currentUser.deposit}$
+              </Button>
+            )}
             {auth.isAuthenticated &&
-              auth.currentUser.role.name === ROLES.BUYER &&
+              authHelper.hasRole(ROLES.BUYER) &&
               productsCount > 0 && (
                 <Button
                   variant="info"

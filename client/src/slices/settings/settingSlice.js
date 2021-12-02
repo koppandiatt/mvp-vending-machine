@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   showCheckout: false,
   showLogin: false,
-  showNewProductForm: false,
-  showDepositModal: false,
+  showProductForm: false,
+  showDeposit: false,
 };
 
 export const settingSlice = createSlice({
@@ -24,16 +24,16 @@ export const settingSlice = createSlice({
       state.showLogin = false;
     },
     showNewProductForm: (state) => {
-      state.showNewProductForm = true;
+      state.showProductForm = true;
     },
     hideNewProductForm: (state) => {
-      state.showNewProductForm = false;
+      state.showProductForm = false;
     },
     showDepositModal: (state) => {
-      state.showDepositModal = true;
+      state.showDeposit = true;
     },
     hideDepositModal: (state) => {
-      state.showDepositModal = false;
+      state.showDeposit = false;
     },
   },
 });

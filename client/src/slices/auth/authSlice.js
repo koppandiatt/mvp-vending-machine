@@ -9,10 +9,21 @@ const initialState = {
   loading: false,
 };
 
-export const doLogin = createAsyncThunk("auth/doLogin", async (credentials) => {
+export const doLogin = createAsyncThunk("auth/Login", async (credentials) => {
   const response = await authApi.login(credentials);
   authHelper.saveJWT(response.data);
   return authHelper.getUserData();
+});
+
+export const doRegister = createAsyncThunk("auth/Register", async (user) => {
+  const response = await authApi.register(user);
+  authHelper.saveJWT(response.data);
+  return authHelper.getUserData();
+});
+
+export const refreshUser = createAsyncThunk("auth/RefreshUser", async () => {
+  const response = await authApi.profile();
+  return response.data;
 });
 
 export const authSlice = createSlice({
@@ -43,6 +54,29 @@ export const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = false;
         state.error = "Incorrect username or password!";
+      })
+      .addCase(refreshUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(refreshUser.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.isAuthenticated = true;
+        state.currentUser = payload;
+      })
+      .addCase(refreshUser.rejected, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+        state.error = "Incorrect username or password!";
+      })
+      .addCase(doRegister.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doRegister.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.isAuthenticated = true;
+        state.currentUser = payload;
       });
   },
 });

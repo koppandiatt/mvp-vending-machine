@@ -2,7 +2,10 @@ import React from "react";
 
 import SingleProduct from "./SingleProduct";
 import { useSelector } from "react-redux";
-import { checkoutProducts } from "../../slices/checkout/checkoutSlice";
+import {
+  checkoutProducts,
+  checkoutProductsCost,
+} from "../../slices/checkout/checkoutSlice";
 
 const ProductList = () => {
   const products = useSelector(checkoutProducts);

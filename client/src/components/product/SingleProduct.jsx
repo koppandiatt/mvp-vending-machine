@@ -8,6 +8,7 @@ import {
   addToCart,
   checkoutProducts,
 } from "../../slices/checkout/checkoutSlice";
+import { showLogin } from "../../slices/settings/settingSlice";
 
 const SingleProduct = ({ product }) => {
   const dispatch = useDispatch();
@@ -15,6 +16,14 @@ const SingleProduct = ({ product }) => {
   const isProductInCart = checkoutList.some((item) => item._id === product._id);
   const chooseBtnText = isProductInCart ? "Already in cart" : "Choose";
   const auth = useSelector(authState);
+
+  const handleChooseProduct = (product) => {
+    if (!auth.isAuthenticated) {
+      dispatch(showLogin());
+    } else {
+      dispatch(addToCart(product));
+    }
+  };
 
   return (
     <Card style={{ width: "300px" }} className="shadow-sm mb-4 rounded">
@@ -35,7 +44,7 @@ const SingleProduct = ({ product }) => {
           (product.amountAvailable ? (
             <Button
               variant="success"
-              onClick={() => dispatch(addToCart(product))}
+              onClick={() => handleChooseProduct(product)}
               disabled={isProductInCart}
             >
               {chooseBtnText}

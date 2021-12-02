@@ -7,7 +7,7 @@ import SideBar from "../components/SideBar";
 import ProductList from "../components/product/ProductList";
 import LoginModal from "../components/modals/LoginModal";
 import authHelper from "../helpers/auth.helper";
-import { authState, loginWithJWT } from "../slices/auth/authSlice";
+import { authState, loginWithJWT, refreshUser } from "../slices/auth/authSlice";
 import { ROLES } from "../constants/roles";
 
 function App() {
@@ -15,8 +15,8 @@ function App() {
   const auth = useSelector(authState);
 
   useEffect(() => {
-    const user = authHelper.getUserData();
-    if (user) dispatch(loginWithJWT(user));
+    const jwt = authHelper.getJwt();
+    if (jwt) dispatch(refreshUser());
   }, []);
 
   return (

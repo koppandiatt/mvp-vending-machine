@@ -9,28 +9,42 @@ import winston from "winston";
 const { ObjectId } = mongoose.Types;
 
 export default {
+  profile: async (req, res) => {
+    let user = await User.findById(req.user._id)
+      .populate({ path: "role", select: "_id name" })
+      .select("_id username deposit role");
+    if (!user) return res.status(404).send({ error: "User not found!" });
+
+    res.send(user);
+  },
   create: async (req, res) => {
+    const { username, password, role: roleName } = req.body;
     // Check if username already exists in the database
-    let user = await User.findOne({ username: req.body.username });
-    if (user) return res.status(400).send("Username already registered!");
+    let user = await User.findOne({ username: username });
+    if (user)
+      return res.status(400).send({ error: "Username already registered!" });
 
     // Check if the given role is valid
-    let role = await Role.findById(req.body.role);
+    const role = await Role.findOne({ name: roleName });
     if (!role)
       return res
         .status(400)
-        .send("The given Role does not exists in the Database!");
+        .send({ error: "The given Role does not exists in the Database!" });
 
-    user = new User(_.pick(req.body, ["username", "password", "role"]));
+    user = new User({
+      username,
+      password,
+      role: role._id,
+    });
     // Crypt the plain text password
     user.password = await cryptPassword(user.password);
     await user.save();
 
+    user.role = role;
+
     const token = user.generateAuthToken();
 
-    res
-      .header("Authorization", `Bearer ${token}`)
-      .send(_.pick(user, ["_id", "username", "role"]));
+    res.send(token);
   },
   // for this endpoint user has to be authenticated
   // so we will set the current user in request parameter

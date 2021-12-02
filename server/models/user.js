@@ -33,7 +33,14 @@ export const userSchema = new Schema({
 
 userSchema.methods.generateAuthToken = function () {
   return JWT.sign(
-    { user: { _id: this._id, username: this.username, role: this.role } },
+    {
+      user: {
+        _id: this._id,
+        username: this.username,
+        deposit: this.deposit,
+        role: this.role,
+      },
+    },
     process.env.JWT_PRIVATE_KEY,
     { expiresIn: "1d" }
   );
@@ -59,7 +66,7 @@ export function validateUser(user) {
       .label("Confirm password")
       .options({ messages: { "any.only": "{{#label}} does not match!" } }),
     deposit: Joi.number(),
-    role: Joi.objectId().required(),
+    role: Joi.string().required(),
   });
 
   return schema.validate(user);

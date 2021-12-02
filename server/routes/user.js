@@ -27,6 +27,7 @@ router.patch(
   ],
   user.deposit
 );
+router.get("/profile", auth.isAuthenticated, user.profile);
 router.get(
   "/products",
   [auth.isAuthenticated, auth.hasRole(ROLES.SELLER)],
