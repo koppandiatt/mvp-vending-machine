@@ -4,7 +4,8 @@ import userRoutes from "./user.js";
 import productRoutes from "./product.js";
 import auth from "../middleware/auth.js";
 import { ROLES } from "../constants/roles.js";
-import shop from "../controllers/shop.js";
+import shop, { validateCheckOut } from "../controllers/shop.js";
+import validate from "../middleware/validate.js";
 
 const router = express.Router();
 
@@ -13,7 +14,11 @@ router.use("/users", userRoutes);
 router.use("/products", productRoutes);
 router.post(
   "/buy",
-  [auth.isAuthenticated, auth.hasRole(ROLES.BUYER)],
+  [
+    auth.isAuthenticated,
+    auth.hasRole(ROLES.BUYER),
+    validate.body(validateCheckOut),
+  ],
   shop.buy
 );
 

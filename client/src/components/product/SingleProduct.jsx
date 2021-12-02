@@ -8,7 +8,11 @@ import {
   addToCart,
   checkoutProducts,
 } from "../../slices/checkout/checkoutSlice";
-import { showLogin } from "../../slices/settings/settingSlice";
+import { editProduct } from "../../slices/product/productSlice";
+import {
+  showLogin,
+  showProductModal,
+} from "../../slices/settings/settingSlice";
 
 const SingleProduct = ({ product }) => {
   const dispatch = useDispatch();
@@ -23,6 +27,11 @@ const SingleProduct = ({ product }) => {
     } else {
       dispatch(addToCart(product));
     }
+  };
+
+  const handleEditProduct = (product) => {
+    dispatch(editProduct(product));
+    dispatch(showProductModal());
   };
 
   return (
@@ -56,7 +65,7 @@ const SingleProduct = ({ product }) => {
           ))}
         {auth.isAuthenticated && authHelper.hasRole(ROLES.SELLER) && (
           <div className="d-flex justify-content-between">
-            <Button variant="info" onClick={() => dispatch(addToCart(product))}>
+            <Button variant="info" onClick={() => handleEditProduct(product)}>
               Edit Product
             </Button>
             <Button

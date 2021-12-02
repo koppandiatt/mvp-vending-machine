@@ -12,7 +12,10 @@ import {
   setCurrentPage,
   setSearchQuery,
 } from "../../slices/product/productSlice";
-import { showDepositModal } from "../../slices/settings/settingSlice";
+import {
+  showDepositModal,
+  showProductModal,
+} from "../../slices/settings/settingSlice";
 
 const TopBar = () => {
   const dispatch = useDispatch();
@@ -64,7 +67,9 @@ const TopBar = () => {
         )}
         {auth.isAuthenticated &&
           auth.currentUser.role.name === ROLES.SELLER && (
-            <Button>Add new product</Button>
+            <Button onClick={() => dispatch(showProductModal())}>
+              Add new product
+            </Button>
           )}
       </Col>
     </Row>

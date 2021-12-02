@@ -83,7 +83,6 @@ export default {
     const limit = req.query.limit || 20;
     const search = req.query.search || "";
     const seller_id = user._id;
-    winston.info(seller_id);
 
     const query = {
       productName: {

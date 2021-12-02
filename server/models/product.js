@@ -38,7 +38,7 @@ export function validateProduct(product) {
   const firstCoin = _.sortBy(COINS)[0];
   const schema = Joi.object({
     productName: Joi.string().min(3).max(255).required(),
-    cost: Joi.number().min(0).multiple(firstCoin).required(),
+    cost: Joi.number().min(firstCoin).multiple(firstCoin).required(),
     amountAvailable: Joi.number().min(0).required(),
     seller: Joi.objectId(),
   });

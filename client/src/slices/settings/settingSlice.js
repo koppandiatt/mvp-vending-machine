@@ -23,10 +23,10 @@ export const settingSlice = createSlice({
     hideLogin: (state) => {
       state.showLogin = false;
     },
-    showNewProductForm: (state) => {
+    showProductModal: (state) => {
       state.showProductForm = true;
     },
-    hideNewProductForm: (state) => {
+    hideProductModal: (state) => {
       state.showProductForm = false;
     },
     showDepositModal: (state) => {
@@ -43,8 +43,8 @@ export const {
   hideCheckout,
   showLogin,
   hideLogin,
-  showNewProductForm,
-  hideNewProductForm,
+  showProductModal,
+  hideProductModal,
   showDepositModal,
   hideDepositModal,
 } = settingSlice.actions;

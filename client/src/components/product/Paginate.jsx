@@ -92,7 +92,7 @@ const Paginate = (props) => {
           )}
 
           {totalPages > 3 && currentPage < totalPages - 2 && (
-            <Pagination.Item onClick={() => choosePage(currentPage + 2)}>
+            <Pagination.Item onClick={() => changeCurrentPage(currentPage + 2)}>
               {currentPage + 2}
             </Pagination.Item>
           )}

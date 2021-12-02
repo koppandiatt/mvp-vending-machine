@@ -3,10 +3,12 @@ import productApi from "./productApi";
 
 const initialState = {
   products: [],
+  selected: null,
   currentPage: 1,
   totalPages: 1,
   searchQuery: "",
   pageSize: 16,
+  error: "",
   loading: false,
 };
 
@@ -26,6 +28,27 @@ export const fetchSellerProducts = createAsyncThunk(
   }
 );
 
+export const createProduct = createAsyncThunk(
+  "product/create",
+  async (product) => {
+    const response = await productApi.create(product);
+    return response.data;
+  }
+);
+
+export const updateProduct = createAsyncThunk(
+  "product/update",
+  async (product) => {
+    const response = await productApi.update(product);
+    return response.data;
+  }
+);
+
+export const deleteProduct = createAsyncThunk("product/delete", async (id) => {
+  const response = await productApi.delete(id);
+  return response.data;
+});
+
 export const productSlice = createSlice({
   name: "product",
   initialState,
@@ -35,6 +58,9 @@ export const productSlice = createSlice({
     },
     setCurrentPage: (state, { payload }) => {
       state.currentPage = payload;
+    },
+    editProduct: (state, { payload }) => {
+      state.selected = payload;
     },
   },
   extraReducers: (builder) => {
@@ -54,11 +80,48 @@ export const productSlice = createSlice({
         state.loading = false;
         state.products = payload.docs;
         state.totalPages = payload.totalPages;
+      })
+      .addCase(createProduct.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(createProduct.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.products.unshift(payload);
+        state.products.pop();
+      })
+      .addCase(createProduct.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = true;
+      })
+      .addCase(updateProduct.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+      .addCase(updateProduct.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.products = state.products.map((product) =>
+          product._id === payload._id ? { ...product, ...payload } : product
+        );
+      })
+      .addCase(updateProduct.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = true;
+      })
+      .addCase(deleteProduct.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteProduct.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.products = state.products.filter(
+          (product) => product._id !== payload
+        );
       });
   },
 });
 
-export const { setSearchQuery, setCurrentPage } = productSlice.actions;
+export const { setSearchQuery, setCurrentPage, editProduct } =
+  productSlice.actions;
 
 export const productState = (state) => state.product;
 
