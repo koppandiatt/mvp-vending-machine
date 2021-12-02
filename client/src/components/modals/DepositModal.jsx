@@ -37,7 +37,11 @@ const DepositModal = () => {
             </Button>
           ))}
           <hr />
-          <Button variant="danger" onClick={() => dispatch(hideDepositModal())}>
+          <Button
+            variant="danger"
+            onClick={() => dispatch(hideDepositModal())}
+            disabled={!currentUser.deposit}
+          >
             Reset deposit to 0
           </Button>
           <hr />

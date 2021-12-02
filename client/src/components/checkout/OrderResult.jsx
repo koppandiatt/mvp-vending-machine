@@ -20,17 +20,18 @@ const OrderResult = () => {
       </ListGroup>
       <h4>Total Cost: {checkout.amountSpent}$</h4>
       <hr />
-      <h5>Your change:</h5>
-      <ListGroup className="my-4">
-        {checkout.change.map(({ coin, amount }) => (
-          <ListGroup.Item>
-            {coin}$ x {amount}
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
-      <Button variant="success" onClick={() => dispatch(hideCheckout())}>
-        Thank you
-      </Button>
+      {checkout.change.length > 0 && (
+        <>
+          <h5>Your change:</h5>
+          <ListGroup className="my-4">
+            {checkout.change.map(({ coin, amount }) => (
+              <ListGroup.Item>
+                {coin}$ x {amount}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </>
+      )}
     </div>
   );
 };

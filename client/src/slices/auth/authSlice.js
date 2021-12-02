@@ -31,6 +31,14 @@ export const makeDeposit = createAsyncThunk("auth/Deposit", async (coin) => {
   return response.data;
 });
 
+export const resetDepositToZero = createAsyncThunk(
+  "auth/ResetDeposit",
+  async () => {
+    const response = await authApi.reset_deposit();
+    return response.data;
+  }
+);
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -42,6 +50,9 @@ export const authSlice = createSlice({
     logout: (state) => {
       state.isAuthenticated = false;
       state.currentUser = {};
+    },
+    resetDeposit: (state) => {
+      state.currentUser = { ...state.currentUser, deposit: 0 };
     },
   },
   extraReducers: (builder) => {
@@ -94,7 +105,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const { loginWithJWT, logout } = authSlice.actions;
+export const { loginWithJWT, logout, resetDeposit } = authSlice.actions;
 
 export const authState = (state) => state.auth;
 
