@@ -23,11 +23,19 @@ const getUserData = () => {
   }
 };
 
-const axiosConfig = {
-  headers: {
-    Authorization: `Bearer ${getJwt()}`,
-    "Content-Type": "application/json",
-  },
+const hasRole = (role) => {
+  const user = getUserData();
+  if (user && user.role.name === role) return true;
+  return false;
+};
+
+const axiosConfig = () => {
+  return {
+    headers: {
+      Authorization: `Bearer ${getJwt()}`,
+      "Content-Type": "application/json",
+    },
+  };
 };
 
 const authHelper = {
@@ -35,6 +43,7 @@ const authHelper = {
   removeJWT,
   getJwt,
   getUserData,
+  hasRole,
   axiosConfig,
 };
 

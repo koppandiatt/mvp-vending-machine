@@ -27,5 +27,10 @@ router.patch(
   ],
   user.deposit
 );
+router.get(
+  "/products",
+  [auth.isAuthenticated, auth.hasRole(ROLES.SELLER)],
+  user.products
+);
 
 export default router;

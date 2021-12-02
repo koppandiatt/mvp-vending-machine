@@ -1,8 +1,12 @@
 import { Col, Pagination, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { PAGE_SIZE } from "../../constants/pageSize";
+import { ROLES } from "../../constants/roles";
+import authHelper from "../../helpers/auth.helper";
+import { authState } from "../../slices/auth/authSlice";
 import {
   fetchProducts,
+  fetchSellerProducts,
   productState,
   setCurrentPage,
 } from "../../slices/product/productSlice";
@@ -10,6 +14,7 @@ import {
 const Paginate = (props) => {
   const dispatch = useDispatch();
   const product = useSelector(productState);
+  const auth = useSelector(authState);
 
   const { currentPage, totalPages, choosePage } = product;
 
@@ -18,14 +23,26 @@ const Paginate = (props) => {
 
   const changeCurrentPage = (page) => {
     dispatch(setCurrentPage(page));
-    dispatch(
-      fetchProducts({
-        page: page,
-        limit: PAGE_SIZE,
-        search: product.searchQuery,
-      })
-    );
+    if (auth.isAuthenticated && authHelper.hasRole(ROLES.SELLER)) {
+      dispatch(
+        fetchSellerProducts({
+          page: page,
+          limit: PAGE_SIZE,
+          search: product.searchQuery,
+        })
+      );
+    } else {
+      dispatch(
+        fetchProducts({
+          page: page,
+          limit: PAGE_SIZE,
+          search: product.searchQuery,
+        })
+      );
+    }
   };
+
+  if (totalPages === 1) return <></>;
 
   return (
     <Row className="mt-3">

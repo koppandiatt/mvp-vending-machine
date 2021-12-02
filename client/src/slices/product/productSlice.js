@@ -18,6 +18,14 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
+export const fetchSellerProducts = createAsyncThunk(
+  "product/fetchSellerProducts",
+  async ({ page, limit, search }) => {
+    const response = await productApi.getSellerProducts(page, limit, search);
+    return response.data;
+  }
+);
+
 export const productSlice = createSlice({
   name: "product",
   initialState,
@@ -35,6 +43,14 @@ export const productSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchProducts.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.products = payload.docs;
+        state.totalPages = payload.totalPages;
+      })
+      .addCase(fetchSellerProducts.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchSellerProducts.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.products = payload.docs;
         state.totalPages = payload.totalPages;

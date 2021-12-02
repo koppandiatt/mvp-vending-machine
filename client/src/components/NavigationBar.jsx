@@ -11,6 +11,7 @@ import {
 import { checkoutProductsCount } from "../slices/checkout/checkoutSlice";
 import { authState, logout } from "../slices/auth/authSlice";
 import authHelper from "../helpers/auth.helper";
+import { ROLES } from "../constants/roles";
 
 const NavigationBar = () => {
   const dispatch = useDispatch();
@@ -32,16 +33,18 @@ const NavigationBar = () => {
         <Container>
           <Navbar.Brand href="/">Vending machine</Navbar.Brand>
           <Nav>
-            {productsCount > 0 && (
-              <Button
-                variant="info"
-                className="me-2 position-relative"
-                onClick={() => dispatch(showCheckout())}
-              >
-                <span className="cart-badge">{productsCount}</span>
-                <FontAwesomeIcon icon={fas.faShoppingBag} />
-              </Button>
-            )}
+            {auth.isAuthenticated &&
+              auth.currentUser.role.name === ROLES.BUYER &&
+              productsCount > 0 && (
+                <Button
+                  variant="info"
+                  className="me-2 position-relative"
+                  onClick={() => dispatch(showCheckout())}
+                >
+                  <span className="cart-badge">{productsCount}</span>
+                  <FontAwesomeIcon icon={fas.faShoppingBag} />
+                </Button>
+              )}
             {auth.isAuthenticated ? (
               <Button onClick={() => logoutUser()} variant="danger">
                 Logout

@@ -2,6 +2,11 @@ import _ from "lodash";
 import bcrypt from "bcrypt";
 import User from "./../models/user.js";
 import Role from "../models/role.js";
+import Product from "../models/product.js";
+import mongoose from "mongoose";
+import winston from "winston";
+
+const { ObjectId } = mongoose.Types;
 
 export default {
   create: async (req, res) => {
@@ -46,6 +51,7 @@ export default {
     await req.user.delete();
     return res.send(req.user);
   },
+
   // for this endpoint user has to be authenticated
   // so we will set the current user in request parameter
   deposit: async (req, res) => {
@@ -55,6 +61,31 @@ export default {
     await user.save();
 
     res.send({ deposit: user.deposit });
+  },
+
+  products: async (req, res) => {
+    let { user } = req;
+    const page = req.query.page || 1;
+    const limit = req.query.limit || 20;
+    const search = req.query.search || "";
+    const seller_id = user._id;
+    winston.info(seller_id);
+
+    const query = {
+      productName: {
+        $regex: `.*${search}.*`,
+        $options: "i",
+      },
+      seller: seller_id,
+    };
+
+    const options = {
+      populate: { path: "seller", select: "_id username" },
+      limit,
+      page,
+    };
+    const products = await Product.paginate(query, options);
+    res.send(products);
   },
 };
 

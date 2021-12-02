@@ -1,4 +1,5 @@
 import JWT from "jsonwebtoken";
+import winston from "winston";
 import { getToken } from "../utils/getToken.js";
 import User from "./../models/user.js";
 import Product from "./../models/product.js";
@@ -18,7 +19,9 @@ export default {
       process.env.JWT_PRIVATE_KEY,
       async function (err, decoded) {
         if (err) return res.status(401).send(`Access denied. ${err.message}`);
-        let user = await User.findById(decoded._id).populate({ path: "role" });
+        let user = await User.findById(decoded.user._id).populate({
+          path: "role",
+        });
         if (!user)
           return res
             .status(404)

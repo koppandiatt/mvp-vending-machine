@@ -3,9 +3,11 @@ import { Button, Col, FormControl, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { PAGE_SIZE } from "../../constants/pageSize";
 import { ROLES } from "../../constants/roles";
+import authHelper from "../../helpers/auth.helper";
 import { authState } from "../../slices/auth/authSlice";
 import {
   fetchProducts,
+  fetchSellerProducts,
   productState,
   setCurrentPage,
   setSearchQuery,
@@ -19,13 +21,23 @@ const TopBar = () => {
   const handleSearch = (value) => {
     dispatch(setSearchQuery(value));
     dispatch(setCurrentPage(1));
-    dispatch(
-      fetchProducts({
-        page: 1,
-        limit: PAGE_SIZE,
-        search: value,
-      })
-    );
+    if (auth.isAuthenticated && authHelper.hasRole(ROLES.SELLER)) {
+      dispatch(
+        fetchSellerProducts({
+          page: 1,
+          limit: PAGE_SIZE,
+          search: value,
+        })
+      );
+    } else {
+      dispatch(
+        fetchProducts({
+          page: 1,
+          limit: PAGE_SIZE,
+          search: value,
+        })
+      );
+    }
   };
 
   return (

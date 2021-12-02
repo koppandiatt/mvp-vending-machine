@@ -28,13 +28,9 @@ const SingleProduct = ({ product }) => {
     <Card style={{ width: "300px" }} className="shadow-sm mb-4 rounded">
       <Card.Header>{product.productName}</Card.Header>
       <Card.Body>
+        <p>Sold by: {product.seller.username}</p>
         <Card.Title>Cost: {product.cost}$ </Card.Title>
-        <Card.Subtitle>Sold by: {product.seller.username}</Card.Subtitle>
-        <Row className="mt-4">
-          <Col>
-            <h5>Total Price: {totalCost}$</h5>
-          </Col>
-        </Row>
+        <Card.Title>Total: {totalCost}$</Card.Title>
       </Card.Body>
       <Card.Footer>
         <Row>
