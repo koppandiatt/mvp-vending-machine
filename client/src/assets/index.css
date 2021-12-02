@@ -50,6 +50,16 @@ nav>.logo {
     box-shadow: none !important;
 }
 
+/* Authentication Tabs */
+
+.auth-tabs>.nav-item {
+    flex: 1;
+}
+
+.auth-tabs button {
+    width: 100%;
+}
+
 @media (max-width: 575.98px) {
     .order-xs-last {
         order: 6 !important;

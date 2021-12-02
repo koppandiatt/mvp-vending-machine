@@ -1,16 +1,26 @@
 import React from "react";
 import { Card, Button, InputGroup, Col, Row } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as fas from "@fortawesome/free-solid-svg-icons";
 import {
+  checkoutProductsCount,
   decreaseQty,
   increaseQty,
   removeFromCart,
 } from "../../slices/checkout/checkoutSlice";
+import { hideCheckout } from "../../slices/settings/settingSlice";
 
 const SingleProduct = ({ product }) => {
   const dispatch = useDispatch();
+  const productCount = useSelector(checkoutProductsCount);
+
+  const removeProductFromCart = (productId) => {
+    dispatch(removeFromCart(productId));
+    if (productCount === 1) {
+      dispatch(hideCheckout());
+    }
+  };
 
   const totalCost = product.cost * product.qty;
 
@@ -52,7 +62,7 @@ const SingleProduct = ({ product }) => {
           <Col xs="3" className="text-align-end">
             <Button
               variant="danger"
-              onClick={() => dispatch(removeFromCart(product._id))}
+              onClick={() => removeProductFromCart(product._id)}
             >
               <FontAwesomeIcon icon={fas.faTrashAlt} />
             </Button>

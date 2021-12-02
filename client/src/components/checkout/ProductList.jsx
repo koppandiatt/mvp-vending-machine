@@ -1,11 +1,10 @@
 import React from "react";
 
 import SingleProduct from "./SingleProduct";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { checkoutProducts } from "../../slices/checkout/checkoutSlice";
 
 const ProductList = () => {
-  const dispatch = useDispatch();
   const products = useSelector(checkoutProducts);
 
   return (

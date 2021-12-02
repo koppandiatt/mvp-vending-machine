@@ -33,7 +33,7 @@ export const userSchema = new Schema({
 
 userSchema.methods.generateAuthToken = function () {
   return JWT.sign(
-    { _id: this._id, username: this.username, role: this.role },
+    { user: { _id: this._id, username: this.username, role: this.role } },
     process.env.JWT_PRIVATE_KEY,
     { expiresIn: "1d" }
   );

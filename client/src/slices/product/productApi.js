@@ -1,4 +1,4 @@
-import http from "./../../services/http";
+import http from "../../services/http.service";
 
 const API_URL = process.env.REACT_APP_API_URL + "/products";
 
