@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert, Button, FormControl, Stack } from "react-bootstrap";
-import Joi from "joi";
 
 import { hideLogin } from "../../slices/settings/settingSlice";
 import { authState, doLogin } from "../../slices/auth/authSlice";

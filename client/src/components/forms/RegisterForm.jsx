@@ -5,7 +5,7 @@ import PasswordComplexity from "joi-password-complexity";
 import { Alert, Button, Form, FormControl, Stack } from "react-bootstrap";
 
 import { hideLogin } from "../../slices/settings/settingSlice";
-import { authState, doLogin, doRegister } from "../../slices/auth/authSlice";
+import { authState, doRegister } from "../../slices/auth/authSlice";
 import { ROLES } from "./../../constants/roles";
 
 const RegisterForm = () => {

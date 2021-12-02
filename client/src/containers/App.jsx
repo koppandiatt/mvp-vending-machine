@@ -7,7 +7,7 @@ import SideBar from "../components/SideBar";
 import ProductList from "../components/product/ProductList";
 import LoginModal from "../components/modals/LoginModal";
 import authHelper from "../helpers/auth.helper";
-import { authState, loginWithJWT, refreshUser } from "../slices/auth/authSlice";
+import { authState, refreshUser } from "../slices/auth/authSlice";
 import { ROLES } from "../constants/roles";
 import DepositModal from "../components/modals/DepositModal";
 import ProductModal from "../components/modals/ProductModal";

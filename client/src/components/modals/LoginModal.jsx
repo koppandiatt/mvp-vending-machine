@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Modal, Tab, Tabs } from "react-bootstrap";
+import { Modal, Tab, Tabs } from "react-bootstrap";
 import { hideLogin, settingsState } from "../../slices/settings/settingSlice";
 import { useDispatch, useSelector } from "react-redux";
 import LoginForm from "../forms/LoginForm";

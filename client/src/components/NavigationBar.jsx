@@ -20,7 +20,7 @@ const NavigationBar = () => {
 
   useEffect(() => {
     if (auth.isAuthenticated) dispatch(hideLogin());
-  }, [auth]);
+  }, [auth.isAuthenticated, dispatch]);
 
   const logoutUser = () => {
     dispatch(logout());

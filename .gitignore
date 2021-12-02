@@ -1,5 +1,6 @@
 */node_modules
 server/logs/
+server/coverage/
 server/test.js
 .env
 MOCK_DATA.json

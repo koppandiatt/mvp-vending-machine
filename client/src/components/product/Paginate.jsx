@@ -16,7 +16,7 @@ const Paginate = (props) => {
   const product = useSelector(productState);
   const auth = useSelector(authState);
 
-  const { currentPage, totalPages, choosePage } = product;
+  const { currentPage, totalPages } = product;
 
   const disableFirst = currentPage === 1;
   const disableLast = currentPage === totalPages;

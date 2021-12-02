@@ -1,11 +1,9 @@
 import React from "react";
-import { Button, ListGroup } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { ListGroup } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import { checkoutState } from "../../slices/checkout/checkoutSlice";
-import { hideCheckout } from "../../slices/settings/settingSlice";
 
 const OrderResult = () => {
-  const dispatch = useDispatch();
   const { checkout } = useSelector(checkoutState);
 
   return (

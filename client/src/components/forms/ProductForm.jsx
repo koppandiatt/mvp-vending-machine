@@ -27,7 +27,7 @@ const ProductForm = () => {
       setCost(selected.cost);
       setAmountAvailable(selected.amountAvailable);
     }
-  }, []);
+  }, [selected]);
 
   const [errors, setErrors] = useState("");
 
