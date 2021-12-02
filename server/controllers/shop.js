@@ -123,7 +123,7 @@ export default {
 
       res.send({
         amountSpent: totalCost,
-        product: productResults,
+        products: productResults,
         change: changeArray,
       });
     } catch (error) {

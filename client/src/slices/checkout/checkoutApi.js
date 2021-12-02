@@ -3,12 +3,20 @@ import http from "../../services/http.service";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-const productApi = {
-  checkout: (productList) => {
-    const URL = API_URL + "/products";
-    const query = `?page=${page}&limit=${limit}&search=${search}`;
-    return http.get(URL + query);
+const checkoutApi = {
+  checkout: (productList, totalCost) => {
+    const URL = API_URL + "/buy";
+    return http.post(
+      URL,
+      {
+        products: productList.map((p) => {
+          return { productId: p._id, amount: p.qty };
+        }),
+        totalCost: totalCost,
+      },
+      authHelper.axiosConfig()
+    );
   },
 };
 
-export default productApi;
+export default checkoutApi;

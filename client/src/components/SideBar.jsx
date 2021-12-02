@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Offcanvas } from "react-bootstrap";
+import { Offcanvas } from "react-bootstrap";
 import { hideCheckout, settingsState } from "../slices/settings/settingSlice";
-import ProductList from "./checkout/ProductList";
-import { checkoutProductsCost } from "../slices/checkout/checkoutSlice";
+import { checkoutState } from "../slices/checkout/checkoutSlice";
+import Cart from "./checkout/Cart";
+import OrderResult from "./checkout/OrderResult";
 
 const SideBar = () => {
   const dispatch = useDispatch();
   const settings = useSelector(settingsState);
-
-  const productsTotalCost = useSelector(checkoutProductsCost);
+  const { checkout } = useSelector(checkoutState);
 
   return (
     <Offcanvas
@@ -22,11 +22,13 @@ const SideBar = () => {
         <Offcanvas.Title>Checkout</Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
-        <ProductList />
-        <div className="text-center">
-          <h4>Final Cost: {productsTotalCost}$</h4>
-          <Button variant="success">Checkout</Button>
-        </div>
+        {checkout ? (
+          <OrderResult />
+        ) : (
+          <>
+            <Cart />
+          </>
+        )}
       </Offcanvas.Body>
     </Offcanvas>
   );

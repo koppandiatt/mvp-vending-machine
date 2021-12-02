@@ -1,16 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import checkoutApi from "./checkoutApi";
 
 const initialState = {
   products: [],
-  totalCost: 0,
+  checkout: null,
   loading: false,
 };
 
 export const buyProducts = createAsyncThunk(
   "checkout/buyProducts",
-  async () => {
-    //const response = await productApi.getProducts(page, limit, search);
-    //return response.data;
+  async ({ products, totalCost }) => {
+    const response = await checkoutApi.checkout(products, totalCost);
+    return response.data;
   }
 );
 
@@ -20,9 +21,7 @@ export const checkoutSlice = createSlice({
   reducers: {
     addToCart: (state, { payload }) => {
       const newProduct = { ...payload, qty: 1 };
-      console.log(newProduct);
       state.products.push(newProduct);
-      state.totalCost += newProduct.cost;
     },
     removeFromCart: (state, { payload }) => {
       state.products = state.products.filter(
@@ -47,7 +46,8 @@ export const checkoutSlice = createSlice({
       })
       .addCase(buyProducts.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.products = payload.docs;
+        state.products = [];
+        state.checkout = payload;
       });
   },
 });
