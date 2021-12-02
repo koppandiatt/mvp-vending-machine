@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import _ from "lodash";
+import Joi from "joi";
 import winston from "winston";
 import Product from "../models/product.js";
 import { COINS } from "../constants/coins.js";
@@ -15,49 +16,101 @@ export default {
 
     The endpoint accepts the following body:
     {
-      "productId": "ObjectId",
-      "amount": "number"
-    }
+    "products": [
+        {
+            "productId": "p_id",
+            "amount": X
+        },
+        ...
+    ],
+    "totalCost": xxx
+}
 
   */
   buy: async (req, res) => {
-    const { productId, amount: quantity } = req.body;
+    const { products, totalCost } = req.body;
+
+    const productMap = new Map(
+      products.map((obj) => [obj.productId, obj.amount])
+    );
+    const productIDs = products.map((p) => p.productId);
     const { user } = req;
-    let product = await Product.findById(productId);
 
-    if (!product)
-      return res
-        .status(404)
-        .send("The product does not exists in the database!");
+    let dbProducts = await Product.find({ _id: { $in: productIDs } });
 
-    if (!product.amountAvailable)
-      return res.status(404).send("This product is not available anymore!");
+    if (dbProducts.length !== productIDs.length)
+      return res.status(404).send({
+        error: `${
+          productIDs.length - dbProducts.length
+        } product does not exists in the database!`,
+      });
 
-    if (product.amountAvailable < quantity)
+    const outOfStockProducts = dbProducts.filter(
+      (p) => p.amountAvailable === 0
+    );
+    if (outOfStockProducts > 0)
+      return res.status(404).send({
+        error: `${outOfStockProducts.length} product are out of stock!`,
+        data: outOfStockProducts,
+      });
+
+    const checkProductsAmount = dbProducts.filter(
+      (p) => p.amountAvailable < productMap.get(p._id.toString())
+    );
+
+    if (checkProductsAmount.length > 0)
       return res.status(400).send({
-        error: "The required amount is not available anymore!",
-        data: _.pick(product, ["_id", "amountAvailable"]),
+        error:
+          "The required amount for some products are not available anymore!",
+        data: checkProductsAmount,
+      });
+
+    //Check price
+    const checkDbCostOfProducts = dbProducts.reduce(function (a, b) {
+      return a + b["cost"] * productMap.get(b["_id"].toString());
+    }, 0);
+    if (checkDbCostOfProducts !== totalCost)
+      return res.status(400).send({
+        error: "The total cost of the products has changed!",
+        data: checkDbCostOfProducts,
       });
 
     const { deposit } = user;
-    const amountSpent = product.cost * quantity;
-    if (amountSpent > deposit) {
+    if (totalCost > deposit) {
       return res.status(400).send({
         error: "The cost of the products exceeds your budget!",
       });
     }
-
     // In case that something goes wrong we use a transaction
-    // to reset User deposit and the product remaining amount
+    // to reset User deposit and the product amount
     const session = await mongoose.startSession();
     try {
       session.startTransaction();
 
-      product = await Product.findByIdAndUpdate(
-        product._id,
-        { $inc: { amountAvailable: -quantity } },
-        { new: true }
-      );
+      const updatePromises = dbProducts.map(async (product) => {
+        const amountOrdered = productMap.get(product._id.toString());
+        const updatedProduct = await Product.findByIdAndUpdate(
+          product._id,
+          {
+            $inc: {
+              amountAvailable: -amountOrdered,
+            },
+          },
+          { new: true }
+        );
+
+        return {
+          ..._.pick(updatedProduct, [
+            "_id",
+            "productName",
+            "cost",
+            "amountAvailable",
+          ]),
+          amountOrdered,
+        };
+      });
+
+      const productResults = await Promise.all(updatePromises);
 
       await User.findByIdAndUpdate(user._id, {
         deposit: 0,
@@ -66,14 +119,11 @@ export default {
       await session.commitTransaction();
       session.endSession();
 
-      const changeArray = getChangeArray(deposit - amountSpent, COINS);
+      const changeArray = getChangeArray(deposit - totalCost, COINS);
 
       res.send({
-        amountSpent,
-        amountOrdered: quantity,
-        product: {
-          ..._.pick(product, ["productName", "cost", "amountAvailable"]),
-        },
+        amountSpent: totalCost,
+        product: productResults,
         change: changeArray,
       });
     } catch (error) {
@@ -90,3 +140,14 @@ export default {
     }
   },
 };
+export function validateCheckOut(products) {
+  const schema = Joi.object({
+    products: Joi.array().items({
+      productId: Joi.objectId().required(),
+      amount: Joi.number().min(1).required(),
+    }),
+    totalCost: Joi.number().required(),
+  });
+
+  return schema.validate(products);
+}
