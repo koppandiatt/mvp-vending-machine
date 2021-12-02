@@ -26,6 +26,11 @@ export const refreshUser = createAsyncThunk("auth/RefreshUser", async () => {
   return response.data;
 });
 
+export const makeDeposit = createAsyncThunk("auth/Deposit", async (coin) => {
+  const response = await authApi.deposit(coin);
+  return response.data;
+});
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -77,6 +82,14 @@ export const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
         state.currentUser = payload;
+      })
+      .addCase(makeDeposit.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(makeDeposit.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.isAuthenticated = true;
+        state.currentUser = { ...state.currentUser, deposit: payload.deposit };
       });
   },
 });

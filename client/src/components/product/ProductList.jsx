@@ -39,7 +39,7 @@ const ProductList = () => {
         })
       );
     }
-  }, [auth]);
+  }, [auth.isAuthenticated]);
 
   return (
     <>

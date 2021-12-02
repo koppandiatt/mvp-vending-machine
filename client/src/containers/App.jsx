@@ -9,6 +9,7 @@ import LoginModal from "../components/modals/LoginModal";
 import authHelper from "../helpers/auth.helper";
 import { authState, loginWithJWT, refreshUser } from "../slices/auth/authSlice";
 import { ROLES } from "../constants/roles";
+import DepositModal from "../components/modals/DepositModal";
 
 function App() {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ function App() {
       )}
 
       <LoginModal />
+      <DepositModal />
     </main>
   );
 }

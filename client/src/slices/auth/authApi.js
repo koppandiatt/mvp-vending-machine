@@ -16,6 +16,10 @@ const authApi = {
     const URL = API_URL + "/users/profile";
     return http.get(URL, authHelper.axiosConfig());
   },
+  deposit: (coin) => {
+    const URL = API_URL + "/users/deposit";
+    return http.patch(URL, { deposit: coin }, authHelper.axiosConfig());
+  },
 };
 
 export default authApi;

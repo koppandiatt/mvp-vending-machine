@@ -12,6 +12,7 @@ import {
   setCurrentPage,
   setSearchQuery,
 } from "../../slices/product/productSlice";
+import { showDepositModal } from "../../slices/settings/settingSlice";
 
 const TopBar = () => {
   const dispatch = useDispatch();
@@ -57,7 +58,9 @@ const TopBar = () => {
       </Col>
       <Col md="4" xs="6" className="text-end">
         {auth.isAuthenticated && auth.currentUser.role.name === ROLES.BUYER && (
-          <Button>Make deposit</Button>
+          <Button onClick={() => dispatch(showDepositModal())}>
+            Make deposit
+          </Button>
         )}
         {auth.isAuthenticated &&
           auth.currentUser.role.name === ROLES.SELLER && (
