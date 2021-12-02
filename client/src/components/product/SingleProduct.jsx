@@ -8,7 +8,7 @@ import {
   addToCart,
   checkoutProducts,
 } from "../../slices/checkout/checkoutSlice";
-import { editProduct } from "../../slices/product/productSlice";
+import { deleteProduct, editProduct } from "../../slices/product/productSlice";
 import {
   showLogin,
   showProductModal,
@@ -70,7 +70,7 @@ const SingleProduct = ({ product }) => {
             </Button>
             <Button
               variant="danger"
-              onClick={() => dispatch(addToCart(product))}
+              onClick={() => dispatch(deleteProduct(product._id))}
             >
               Delete Product
             </Button>

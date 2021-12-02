@@ -114,7 +114,7 @@ export const productSlice = createSlice({
       .addCase(deleteProduct.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.products = state.products.filter(
-          (product) => product._id !== payload
+          (product) => product._id !== payload._id
         );
       });
   },
