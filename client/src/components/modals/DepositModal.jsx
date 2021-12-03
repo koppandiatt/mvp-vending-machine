@@ -6,7 +6,11 @@ import {
 } from "../../slices/settings/settingSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { COINS } from "./../../constants/coins";
-import { authState, makeDeposit } from "../../slices/auth/authSlice";
+import {
+  authState,
+  makeDeposit,
+  resetDepositToZero,
+} from "../../slices/auth/authSlice";
 
 const DepositModal = () => {
   const dispatch = useDispatch();
@@ -39,7 +43,7 @@ const DepositModal = () => {
           <hr />
           <Button
             variant="danger"
-            onClick={() => dispatch(hideDepositModal())}
+            onClick={() => dispatch(resetDepositToZero())}
             disabled={!currentUser.deposit}
           >
             Reset deposit to 0

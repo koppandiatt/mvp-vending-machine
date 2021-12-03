@@ -27,6 +27,11 @@ router.patch(
   ],
   user.deposit
 );
+router.patch(
+  "/reset",
+  [auth.isAuthenticated, auth.hasRole(ROLES.BUYER)],
+  user.resetDeposit
+);
 router.get("/profile", auth.isAuthenticated, user.profile);
 router.get(
   "/products",

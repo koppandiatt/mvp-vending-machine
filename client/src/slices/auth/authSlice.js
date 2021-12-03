@@ -101,6 +101,13 @@ export const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
         state.currentUser = { ...state.currentUser, deposit: payload.deposit };
+      })
+      .addCase(resetDepositToZero.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(resetDepositToZero.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.currentUser = { ...state.currentUser, deposit: 0 };
       });
   },
 });

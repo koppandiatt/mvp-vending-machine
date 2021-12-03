@@ -78,6 +78,15 @@ export default {
     res.send({ deposit: user.deposit });
   },
 
+  resetDeposit: async (req, res) => {
+    let user = await User.findById(req.user._id);
+    user.deposit = 0;
+
+    await user.save();
+
+    res.send({ deposit: user.deposit });
+  },
+
   products: async (req, res) => {
     const page = req.query.page || 1;
     const limit = req.query.limit || 20;
