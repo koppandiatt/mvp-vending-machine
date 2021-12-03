@@ -19,40 +19,26 @@ export default {
       process.env.JWT_PRIVATE_KEY,
       async function (err, decoded) {
         if (err) return res.status(401).send(`Access denied. ${err.message}`);
-        let user = await User.findById(decoded.user._id).populate({
-          path: "role",
-        });
-        if (!user)
-          return res
-            .status(404)
-            .send("The given User does not exists in the Database!");
-        req.user = user;
+        req.user = decoded.user;
         next();
       }
     );
   },
   hasRole: (roles) => {
     return async (req, res, next) => {
-      if (!req?.user?._id) {
-        return res.status(404).send("User not found!");
-      }
-      const user = await User.findById(req.user._id).populate({ path: "role" });
-      if (Array.isArray(roles) && !roles.includes(user.role.name)) {
+      const user = req.user;
+      if (
+        user.role.name !== roles ||
+        (Array.isArray(roles) && !roles.includes(user.role.name))
+      ) {
         return res
-          .status(401)
-          .send(`Access denied. You don't have enough privileges!`);
-      } else if (user.role.name !== roles) {
-        return res
-          .status(401)
+          .status(403)
           .send(`Access denied. You don't have enough privileges!`);
       }
       next();
     };
   },
   isProductOwner: async (req, res, next) => {
-    if (!req?.user?._id) return res.status(404).send("User not found!");
-
-    const user = await User.findById(req.user._id).populate({ path: "role" });
     const product = await Product.findById(req.params.id);
     if (!product)
       return res

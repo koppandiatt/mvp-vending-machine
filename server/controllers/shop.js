@@ -39,7 +39,7 @@ export default {
     let dbProducts = await Product.find({ _id: { $in: productIDs } });
 
     if (dbProducts.length !== productIDs.length)
-      return res.status(404).send({
+      return res.status(400).send({
         error: `${
           productIDs.length - dbProducts.length
         } product does not exists in the database!`,
@@ -49,7 +49,7 @@ export default {
       (p) => p.amountAvailable === 0
     );
     if (outOfStockProducts > 0)
-      return res.status(404).send({
+      return res.status(400).send({
         error: `${outOfStockProducts.length} product are out of stock!`,
         data: outOfStockProducts,
       });
@@ -75,7 +75,8 @@ export default {
         data: checkDbCostOfProducts,
       });
 
-    const { deposit } = user;
+    const dbUser = await User.findById(user._id);
+    const deposit = dbUser.deposit;
     if (totalCost > deposit) {
       return res.status(400).send({
         error: "The cost of the products exceeds your budget!",

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Offcanvas } from "react-bootstrap";
 import { hideCheckout, settingsState } from "../slices/settings/settingSlice";
@@ -12,8 +12,11 @@ const SideBar = () => {
   const settings = useSelector(settingsState);
   const { checkout } = useSelector(checkoutState);
 
+  useEffect(() => {
+    if (checkout) dispatch(resetDeposit());
+  }, [checkout]);
+
   const closeCheckout = () => {
-    dispatch(resetDeposit());
     dispatch(hideCheckout());
   };
 

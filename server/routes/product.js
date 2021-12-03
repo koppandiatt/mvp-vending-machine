@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.get("/", product.list);
 router.get("/:id", validate.objectID, product.get);
+
 router.post(
   "/",
   [
@@ -23,8 +24,8 @@ router.put(
   [
     auth.isAuthenticated,
     auth.hasRole(ROLES.SELLER),
-    auth.isProductOwner,
     validate.objectID,
+    auth.isProductOwner,
     validate.body(validateProduct),
   ],
   product.update
@@ -34,8 +35,8 @@ router.delete(
   [
     auth.isAuthenticated,
     auth.hasRole(ROLES.SELLER),
-    auth.isProductOwner,
     validate.objectID,
+    auth.isProductOwner,
   ],
   product.delete
 );

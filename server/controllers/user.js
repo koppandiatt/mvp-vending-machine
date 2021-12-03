@@ -49,7 +49,7 @@ export default {
   // for this endpoint user has to be authenticated
   // so we will set the current user in request parameter
   changePassword: async (req, res) => {
-    let { user } = req;
+    let user = await User.findById(req.user._id);
     user.password = await cryptPassword(req.body.password);
     await user.save();
 
@@ -61,15 +61,16 @@ export default {
   },
   // for this endpoint user has to be authenticated
   // so we will set the current user in request parameter
-  delete: async (req, res) => {
-    await req.user.delete();
+  deleteSelf: async (req, res) => {
+    let user = await User.findById(req.user._id);
+    await user.delete();
     return res.send(req.user);
   },
 
   // for this endpoint user has to be authenticated
   // so we will set the current user in request parameter
   deposit: async (req, res) => {
-    let { user } = req;
+    let user = await User.findById(req.user._id);
     user.deposit += req.body.deposit;
 
     await user.save();
@@ -78,11 +79,10 @@ export default {
   },
 
   products: async (req, res) => {
-    let { user } = req;
     const page = req.query.page || 1;
     const limit = req.query.limit || 20;
     const search = req.query.search || "";
-    const seller_id = user._id;
+    const seller_id = req.user._id;
 
     const query = {
       productName: {

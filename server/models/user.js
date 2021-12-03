@@ -41,12 +41,12 @@ userSchema.methods.generateAuthToken = function () {
         role: this.role,
       },
     },
-    process.env.JWT_PRIVATE_KEY,
+    process.env.JWT_PRIVATE_KEY || "key",
     { expiresIn: "1d" }
   );
 };
 
-const User = model(MODELS.USER, userSchema);
+export const User = model(MODELS.USER, userSchema);
 
 export function validateUser(user) {
   const passwordComplexity = {

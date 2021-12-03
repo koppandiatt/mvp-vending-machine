@@ -1,13 +1,13 @@
 import winston from "winston";
 import database from "./database.js";
 import logging from "./logging.js";
-import checkJWTPrivateKey from "./config.js";
+import config from "./config.js";
 import customJoi from "../utils/customJoi.js";
 
-async function initializeServer() {
+async function initializeServer(app) {
   try {
     logging();
-    checkJWTPrivateKey();
+    config(app);
     await database();
     customJoi();
   } catch (error) {

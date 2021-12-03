@@ -17,7 +17,7 @@ router.patch(
   [auth.isAuthenticated, validate.body(validatePassword)],
   user.changePassword
 );
-router.delete("/", auth.isAuthenticated, user.delete);
+router.delete("/", auth.isAuthenticated, user.deleteSelf);
 router.patch(
   "/deposit",
   [

@@ -1,7 +1,8 @@
 import winston from "winston";
+
 const { format } = winston;
 
-function logging() {
+function logging(app) {
   const fileError = new winston.transports.File({
     filename: "logs/errors.log",
     level: "error",
@@ -17,7 +18,7 @@ function logging() {
   winston.add(fileError);
   winston.add(fileLogs);
 
-  if (process.env.NODE_ENV !== "production") {
+  if (!["production", "test"].includes(process.env.NODE_ENV)) {
     const customFormat = winston.format.combine(
       winston.format.colorize({
         all: true,
